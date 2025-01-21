@@ -1574,184 +1574,184 @@ class Game:
 
 
 
-#     def mainloop(self,ac):
-#         global round_marker, end_round, ready_text, fight_text,impact,impact2
-#         # round_marker = (False, False)
-#         # end_round = False
-#         #ready_text = menu.Text('Ready',Point(128,120))
-#         # fight_text = menu.Text('Fight !!',Point(96,120))
-#         #print("start")
-#     # while not end_round:
-#         #time.sleep(0.1) 
-#         #print(end_round)
-#         #print(self.character1.health.amIdead(),self.character2.health.amIdead())
-#         ## get keys pressed ##
-#         #print(self.character1.energy.energy)
+    def mainloop(self,ac):
+        global round_marker, end_round, ready_text, fight_text,impact,impact2
+        # round_marker = (False, False)
+        # end_round = False
+        #ready_text = menu.Text('Ready',Point(128,120))
+        # fight_text = menu.Text('Fight !!',Point(96,120))
+        #print("start")
+    # while not end_round:
+        #time.sleep(0.1) 
+        #print(end_round)
+        #print(self.character1.health.amIdead(),self.character2.health.amIdead())
+        ## get keys pressed ##
+        #print(self.character1.energy.energy)
         
-#         ######################
+        ######################
         
-#         stick_inputs_p2, btn_inputs_P2, special = self.input_reader.getInputs()
-#         stick_inputs_p1=[]
-#         btn_inputs_P1 = [] 
-#         # Get Player 1 hit keys
-#         if ac == 4:
-#             btn_inputs_P1.append(KEYCONST.BTNA)
-#         if ac == 5:
-#             btn_inputs_P1.append(KEYCONST.BTNB)
-#         if ac == 6:
-#             btn_inputs_P1.append(KEYCONST.BTNC)
-#         if ac == 3:
-#             stick_inputs_p1.append(KEYCONST.UP)
-#         if ac == 2:
-#             stick_inputs_p1.append(KEYCONST.DOWN)
-#         if ac == 1:
-#             stick_inputs_p1.append(KEYCONST.BACK)
-#         if ac == 0:
-#             stick_inputs_p1.append(KEYCONST.FORW)  
+        stick_inputs_p2, btn_inputs_P2, special = self.input_reader.getInputs()
+        stick_inputs_p1=[]
+        btn_inputs_P1 = [] 
+        # Get Player 1 hit keys
+        if ac == 4:
+            btn_inputs_P1.append(KEYCONST.BTNA)
+        if ac == 5:
+            btn_inputs_P1.append(KEYCONST.BTNB)
+        if ac == 6:
+            btn_inputs_P1.append(KEYCONST.BTNC)
+        if ac == 3:
+            stick_inputs_p1.append(KEYCONST.UP)
+        if ac == 2:
+            stick_inputs_p1.append(KEYCONST.DOWN)
+        if ac == 1:
+            stick_inputs_p1.append(KEYCONST.BACK)
+        if ac == 0:
+            stick_inputs_p1.append(KEYCONST.FORW)  
         
-#         # Get Player 2 hit keys
+        # Get Player 2 hit keys
 
-#         #print("Stick Inputs P1:", stick_inputs_p1)
-#         #print(self.config.keysP1)
-#         # print("Button Inputs P1:", btn_inputs_P1)
-#         # print("Stick Inputs P2:", stick_inputs_p2)
-#         # print("Button Inputs P2:", btn_inputs_P2)
-#         # print("Special Input:", special)
-#         #print(self.character1.position.x)
-#         if DEBUG:
-#             if special == 1:
-#                 self.character1.health.reinit()
-#                 self.character2.health.reinit()
-#             if special == 2:
-#                 self.character1.energy.add(96)
-#                 self.character2.energy.add(96)
-#             if special == 3:
-#                 self.ui.timer.reinit()
-#         if special == 'PAUSE':
-#             special = self.pause_loop()
-#         if special == 'QUIT':
-#             return 'QUIT'
+        #print("Stick Inputs P1:", stick_inputs_p1)
+        #print(self.config.keysP1)
+        # print("Button Inputs P1:", btn_inputs_P1)
+        # print("Stick Inputs P2:", stick_inputs_p2)
+        # print("Button Inputs P2:", btn_inputs_P2)
+        # print("Special Input:", special)
+        #print(self.character1.position.x)
+        if DEBUG:
+            if special == 1:
+                self.character1.health.reinit()
+                self.character2.health.reinit()
+            if special == 2:
+                self.character1.energy.add(96)
+                self.character2.energy.add(96)
+            if special == 3:
+                self.ui.timer.reinit()
+        if special == 'PAUSE':
+            special = self.pause_loop()
+        if special == 'QUIT':
+            return 'QUIT'
         
-#         ## Is round over ? ##
-#         #####################
-#         if not end_round and self.color[3] == 0:
-#             if self.ui.timer.time == 0 or self.character1.health.amIdead() or self.character2.health.amIdead():
-#                 if self.character1.health.hp > self.character2.health.hp:
-#                     round_marker = (True, False)
-#                 elif self.character1.health.hp < self.character2.health.hp:
-#                     round_marker = (False, True)
-#                 else: round_marker = (True, True)
-#                 end_round = True
+        ## Is round over ? ##
+        #####################
+        if not end_round and self.color[3] == 0:
+            if self.ui.timer.time == 0 or self.character1.health.amIdead() or self.character2.health.amIdead():
+                if self.character1.health.hp > self.character2.health.hp:
+                    round_marker = (True, False)
+                elif self.character1.health.hp < self.character2.health.hp:
+                    round_marker = (False, True)
+                else: round_marker = (True, True)
+                end_round = True
                 
-#                 self.character1.stick_inputs = [None]
-#                 self.character1.btn_inputs = [None]
-#                 self.character2.stick_inputs = [None]
-#                 self.character2.btn_inputs = [None]
-#             else:
-#                 self.character1.setInputs(stick_inputs_p1, btn_inputs_P1)
-# #                self.character1.print_inputs()
-#                 self.character2.setInputs(stick_inputs_p2, btn_inputs_P2)
+                self.character1.stick_inputs = [None]
+                self.character1.btn_inputs = [None]
+                self.character2.stick_inputs = [None]
+                self.character2.btn_inputs = [None]
+            else:
+                self.character1.setInputs(stick_inputs_p1, btn_inputs_P1)
+    #                self.character1.print_inputs()
+                self.character2.setInputs(stick_inputs_p2, btn_inputs_P2)
             
-#         ## Actions of game objects ##
-#         #############################
-#         self.character1.action(self.character2, self.ui.timer.time)
-#         self.character2.action(self.character1, self.ui.timer.time)
-#         scrolling = self.background.action(self.center()) # deplacement du decor 
-#         collision = Collision(self.character1.getGameRect(self.character1.hitBox_list),(self.character2.getGameRect(self.character2.hitBox_list)))
-#         if collision.center != None:
-#             self.push_caracters(collision.center)
-#         position1, position2 = self.character1.position, self.character2.position
-#         self.character1.move(scrolling, position2, self.character2.getState()) # apply movement and change facing if needed
-#         self.character2.move(scrolling, position1, self.character1.getState()) # apply movement and change facing if needed
+        ## Actions of game objects ##
+        #############################
+        self.character1.action(self.character2, self.ui.timer.time)
+        self.character2.action(self.character1, self.ui.timer.time)
+        scrolling = self.background.action(self.center()) # deplacement du decor 
+        collision = Collision(self.character1.getGameRect(self.character1.hitBox_list),(self.character2.getGameRect(self.character2.hitBox_list)))
+        if collision.center != None:
+            self.push_caracters(collision.center)
+        position1, position2 = self.character1.position, self.character2.position
+        self.character1.move(scrolling, position2, self.character2.getState()) # apply movement and change facing if needed
+        self.character2.move(scrolling, position1, self.character1.getState()) # apply movement and change facing if needed
         
-#         ## Detect collisions ##
-#         #######################
+        ## Detect collisions ##
+        #######################
         
-#         impact = self.character1.attack(self.character2)
-#         impact2 = self.character2.attack(self.character1)
-#         if impact != None:
-#             ImpactControler().add_impact(impact[0], impact[1])
-#             self.character2.turn_around_check(self.character1.position)
-#         if impact2 != None:
-#             ImpactControler().add_impact(impact2[0], impact2[1])
-#             self.character1.turn_around_check(self.character2.position)
-#         ## Refresh screen ##
-#         ####################
-#         self.screen.fill((0,0,0))
-#         ## Mise en place du decor
-#         self.background.print_me(self.screen)
-#         self.ui.print_me(self.screen,
-#                             self.character1.health, self.character2.health,
-#                             self.character1.combo_count, self.character2.combo_count)
-#         ## Mise en place des personnages
-#         if self.character2.getState() == STATECONST.STATE_ATK and \
-#             self.character1.getState() != STATECONST.STATE_ATK:
-#             self.character1.print_me(self.screen)
-#             self.character2.print_me(self.screen)
-#         elif self.character1.getState() == STATECONST.STATE_DOWN and \
-#                 self.character2.getState() == STATECONST.STATE_DOWN:
-#             self.character1.print_me(self.screen)
-#             self.character2.print_me(self.screen)
-#         else:
-#             self.character2.print_me(self.screen)
-#             self.character1.print_me(self.screen)
-#         ## Mise en place des impacts
-#         ImpactControler().print_me(self.screen)
-#         ## Mise en place du fade
-#         if self.color[3] != 0:
-#             fade = pygame.Surface((320, 240)).convert_alpha()
-#             fade.fill(self.color)
-#             self.screen.blit(fade, (0,0))
+        impact = self.character1.attack(self.character2)
+        impact2 = self.character2.attack(self.character1)
+        if impact != None:
+            ImpactControler().add_impact(impact[0], impact[1])
+            self.character2.turn_around_check(self.character1.position)
+        if impact2 != None:
+            ImpactControler().add_impact(impact2[0], impact2[1])
+            self.character1.turn_around_check(self.character2.position)
+        ## Refresh screen ##
+        ####################
+        self.screen.fill((0,0,0))
+        ## Mise en place du decor
+        self.background.print_me(self.screen)
+        self.ui.print_me(self.screen,
+                            self.character1.health, self.character2.health,
+                            self.character1.combo_count, self.character2.combo_count)
+        ## Mise en place des personnages
+        if self.character2.getState() == STATECONST.STATE_ATK and \
+            self.character1.getState() != STATECONST.STATE_ATK:
+            self.character1.print_me(self.screen)
+            self.character2.print_me(self.screen)
+        elif self.character1.getState() == STATECONST.STATE_DOWN and \
+                self.character2.getState() == STATECONST.STATE_DOWN:
+            self.character1.print_me(self.screen)
+            self.character2.print_me(self.screen)
+        else:
+            self.character2.print_me(self.screen)
+            self.character1.print_me(self.screen)
+        ## Mise en place des impacts
+        ImpactControler().print_me(self.screen)
+        ## Mise en place du fade
+        if self.color[3] != 0:
+            fade = pygame.Surface((320, 240)).convert_alpha()
+            fade.fill(self.color)
+            self.screen.blit(fade, (0,0))
         
-#         ## Fading ##
-#         ############
-#         if end_round and self.winpose():
-#             if self.endwin:
-#                 if self.color[3] < 255:
-#                     self.color = (0,0,0,self.color[3]+15)
-#                     if self.color[3] > 255:
-#                         self.color = (0,0,0,255)
-#                 # else:
-#                 #     end_round = False
-#                 #     if self.initRound(round_marker[0], round_marker[1]):NOT NEED FOR TRAINING NIVED O
-#                 #         break
-#             else:
-#                 if btn_inputs_P1 != [] or btn_inputs_P2 != []:
-#                     self.endwin = True
-#         else:
-#             if self.color[3] > 0:
-#                 if self.color[3] > 128:
-#                     ready_text.print_me(self.screen)
-#                 else: fight_text.print_me(self.screen)
-#                 self.color = (0,0,0,self.color[3]-15)
-#                 if self.color[3] < 0:
-#                     self.color = (0,0,0,0)
+        ## Fading ##
+        ############
+        if end_round and self.winpose():
+            if self.endwin:
+                if self.color[3] < 255:
+                    self.color = (0,0,0,self.color[3]+15)
+                    if self.color[3] > 255:
+                        self.color = (0,0,0,255)
+                # else:
+                #     end_round = False
+                #     if self.initRound(round_marker[0], round_marker[1]):NOT NEED FOR TRAINING NIVED O
+                #         break
+            else:
+                if btn_inputs_P1 != [] or btn_inputs_P2 != []:
+                    self.endwin = True
+        else:
+            if self.color[3] > 0:
+                if self.color[3] > 128:
+                    ready_text.print_me(self.screen)
+                else: fight_text.print_me(self.screen)
+                self.color = (0,0,0,self.color[3]-15)
+                if self.color[3] < 0:
+                    self.color = (0,0,0,0)
         
-#         ## Ticking ##
-#         #############
-#         tick_time = 2 # set the ticking time
-#         self.character1.tick_me(tick_time)
-#         self.character2.tick_me(tick_time)
-#         ImpactControler().tick_me(tick_time)
-#         if not end_round:
-#             self.ui.tick_me(tick_time)
+        ## Ticking ##
+        #############
+        tick_time = 2 # set the ticking time
+        self.character1.tick_me(tick_time)
+        self.character2.tick_me(tick_time)
+        ImpactControler().tick_me(tick_time)
+        if not end_round:
+            self.ui.tick_me(tick_time)
         
-#         if self.character1.health.amIdead() or self.character2.health.amIdead():
-# #                if self.character1.getState() == STATECONST.STATE_WIN \
-# #                or self.character2.getState() == STATECONST.STATE_WIN:
-# #                    self.clock.tick(30)
-# #                else: self.clock.tick(15)
-#             self.clock.tick(15)      
-#         else: self.clock.tick(30) 
+        if self.character1.health.amIdead() or self.character2.health.amIdead():
+    #                if self.character1.getState() == STATECONST.STATE_WIN \
+    #                or self.character2.getState() == STATECONST.STATE_WIN:
+    #                    self.clock.tick(30)
+    #                else: self.clock.tick(15)
+            self.clock.tick(15)      
+        else: self.clock.tick(30) 
         
-#         ## Display ##
-#         ############# 
-#         config.Screen().display_update(self.screen)
-#         return impact
-    
-#     # return self.ui.scoreP1, self.ui.scoreP2
+        ## Display ##
+        ############# 
+        config.Screen().display_update(self.screen)
+        return impact
 
-    def mainloop(self,ac, ac2):
+    # return self.ui.scoreP1, self.ui.scoreP2
+
+    def mainloopa(self,ac,ac2):
             global round_marker, end_round, ready_text, fight_text,impact,impact2
             # round_marker = (False, False)
             # end_round = False
