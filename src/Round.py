@@ -1590,6 +1590,12 @@ class Game:
         ######################
         
         stick_inputs_p2, btn_inputs_P2, special = self.input_reader.getInputs()
+        if btn_inputs_P2:  # Check if btn_inputs_p2 is not empty
+            act=btn_inputs_P2[0]
+        elif stick_inputs_p2:  # Check if stick_inputs_p2 is not empty
+            act=stick_inputs_p2[0]
+        else:  # If both are empty, return 7
+            act=7
         stick_inputs_p1=[]
         btn_inputs_P1 = [] 
         # Get Player 1 hit keys
@@ -1746,7 +1752,7 @@ class Game:
         ## Display ##
         ############# 
         config.Screen().display_update(self.screen)
-        return impact
+        return impact,act
 
     # return self.ui.scoreP1, self.ui.scoreP2
 

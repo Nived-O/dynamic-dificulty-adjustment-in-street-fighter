@@ -17,6 +17,7 @@ import torch.nn as nn
 import torch.optim as optim
 import config
 import menu
+import pandas as pd
 
 
 
@@ -31,9 +32,16 @@ class StopTrainingOnDoneCallback(BaseCallback):
             return False  # Stop training immediately
         return True  # Continue training
 
-def log_data_with_actions(observation, player1_action, player2_action):
+def log_data_with_actions(observation, player1_action, player2_action, file_path="data.csv"):
+    # Ensure observation is a list
+    if isinstance(observation, np.ndarray):
+        observation = observation.tolist()
+    
+    # Combine the data
     row = observation + [player1_action, player2_action]
-    with open("data.csv", mode="a", newline="") as file:
+    
+    # Write to CSV
+    with open(file_path, mode="a", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(row)
 
@@ -100,13 +108,11 @@ class StreetFighterEnv(gym.Env):
         
         # Update the game state (you may have a game loop or logic to handle       
         # Get the current observation
-        i1=self.game.mainloop(action)
+        i1,pa2=self.game.mainloop(action)
         observation = self._get_observation()
         reward=0
         # Calculate the reward (implement your reward logic)
         #reward = self._calculate_reward()
-        if action == 7:
-            reward=1
         if i1 !=None:
             reward+=5
         if(action in(4,5,6)):
@@ -117,12 +123,13 @@ class StreetFighterEnv(gym.Env):
         # Determine if the game is done
         done = self._is_done()
         if done:
-            if(self.player1.health.hp<1):
+            if(self.player1.health.hp<self.player2.health.hp):
                 self.won=2
             else:
                 self.won=1
         info={}
         truncated = False
+        log_data_with_actions(observation,action,pa2)
         
         return observation, reward, done,truncated, info
     
@@ -161,11 +168,19 @@ class StreetFighterEnv(gym.Env):
 def rein():
     env=StreetFighterEnv()
     model = PPO.load("ppo_streetfighter", env=env)
-    model.learn(total_timesteps=100,callback=StopTrainingOnDoneCallback())
+    model.learn(total_timesteps=1000,callback=StopTrainingOnDoneCallback())
     model.save("ppo_streetfighter")
+
+
     ppo_model = PPO.load("ppo_streetfighter")
-
-
+    df = pd.read_csv("data.csv", skiprows=1, header=None)
+    obs_data = df.drop(columns=[8, 9])  
+    obs_tensor = torch.tensor(obs_data.values, dtype=torch.float32)
+    torch.save(obs_tensor, "fighting_data.pt")
+    action_data = df[9]  
+    action_tensor = torch.tensor(action_data.values, dtype=torch.long)  # Long for classification
+    torch.save(action_tensor, "action_data.pt")
+    print("✅ Actions saved as 'action_data.pt'")
 
     env.screen.fill((0, 0, 0))  # RGB for white
     pygame.display.flip()
@@ -214,12 +229,17 @@ def rein():
                 optimizer.step()
             print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.4f}")
         ppo_model.save("ppo_streetfighter")
-        print("✅ Training complete! Model saved as ppo_streetfighter_bc")
+        print("✅ Training complete! Model saved as ppo_streetfighter")
         with open("../res/level.txt", "r") as file:
             level = file.read().strip()
             new_level = str(int(level) + 1)
             with open("../res/level.txt", "w") as file:
                 file.write(new_level)
+        df = pd.read_csv("data.csv")
+        # Create an empty DataFrame with the same columns
+        empty_df = df.head(0)
+        # Write the empty DataFrame (with only header) back to the CSV file
+        empty_df.to_csv("data.csv", index=False)
 
 
 if __name__ == "__main__":
