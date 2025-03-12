@@ -3,9 +3,10 @@ from pygame.locals import *
 from random import randint
 from game import Point
 import config
-import Round
+#import Round
 import game
-
+import load
+import shutil
 class Fight_stats:
     def __init__(self):
         self.wins_P1 = 0
@@ -594,6 +595,10 @@ class Credits():
         self.addTxt('')
         self.addTxt('')
         self.addTxt('')
+        self.addTxt('NIVED O')
+        self.addTxt('JOEL MATHEW SIBY')
+        self.addTxt('ADARSH JOHNSON')
+        self.addTxt('GODWIN PAUL')
         self.addTxt('A game by Saitho')
         self.addTxt('  comment on:')
         self.addTxt('    pygame.org')
@@ -760,26 +765,27 @@ class OptionMenu(Menu):
         self.addElt(MultChoice('Time', ['infinite', '30', '60', '99'], value = self.config.time))
         self.addElt(MultChoice('Rounds to win', ['1', '2', '3', '5'], value = self.config.rounds))
         self.addElt(Text(''))
-        self.addElt(Text('Video Option:'))
-        self.addElt(MultChoice('Size', ['320x240', '640x480', '640x480(2X)', '800x600', '960x720', '960x720(2X)', '1280x960', '1280x960(2X)', 'Fullscreen'], value = self.config.video))
-#        self.addElt(YesNo('Fullscreen', value = self.config.fullscreen))
+        #self.addElt(Text('Video Option:'))
+        #self.addElt(MultChoice('Size', ['320x240', '640x480', '640x480(2X)', '800x600', '960x720', '960x720(2X)', '1280x960', '1280x960(2X)', 'Fullscreen'], value = self.config.video))
+        #self.addElt(YesNo('Fullscreen', value = self.config.fullscreen))
         self.addElt(Text(''))
         self.addElt(Text('Sound Options'))
         self.addElt(Value('Sound', value = self.config.sound, maxValue = 8))
         self.addElt(Value('Music', value = self.config.music, maxValue = 8))
         self.addElt(Text(''))
-        self.addElt(KeySetter('Set keys for P1', value = self.config.keysP1))
+        #self.addElt(KeySetter('Set keys for P1', value = self.config.keysP1))
         self.addElt(KeySetter('Set keys for P2', value = self.config.keysP2))
         self.choice = 1
     
     def back(self):
         self.config.time = self.options[1].choice
         self.config.rounds = self.options[2].choice
-        self.config.video = self.options[5].choice
-        self.config.sound = self.options[8].value
-        self.config.music = self.options[9].value
-        self.config.keysP1 = self.options[11].value
-        self.config.keysP2 = self.options[12].value
+        self.config.video = 7#self.options[5].choice
+        self.config.sound = self.options[6].value
+        self.config.music = self.options[7].value
+        self.config.keysP1 = [9, 1073741905, 1073741904, 1073741903, 1073741913, 1073741914, 1073741915]#self.options[11].value
+        self.config.keysP2 = self.options[9].value
+        print(self.config.keysP1)
         self.config.saveconfig('../res/config.txt')
 
 class MainMenu(Menu):
@@ -787,16 +793,46 @@ class MainMenu(Menu):
         self.config = config.OptionConfig('../res/config.txt')
         config.SoundPlayer().play_music('Intro.mp3')
         Menu.__init__(self, position, screen, 'MenuScreen.png')
-        #self.addElt(MenuElt('Start Vs Game', self.call_game))
-        self.call_game()
-        #self.addElt(MenuElt('Options', self.call_option))
-        #self.addElt(MenuElt('Credits', self.call_credits))
+        self.addElt(MenuElt('Start Vs Game', self.maingame))
+        self.addElt(MenuElt('Options', self.call_option))
+        self.addElt(MenuElt('Credits', self.call_credits))
+        self.addElt(MenuElt('RESET AI', self.call_reset))
+        self.addElt(MenuElt('LEVEL', self.call_level))
         self.choice = 0
         self.fight_stats = Fight_stats()
-    
+
+    def call_level(self):
+        menu = Level(self.screen, Point(20,10))
+        menu.mainloop()
+
+
+
+    def call_reset(self):
+        original_file = "ppo_streetfighter.zip"
+        backup_file = "ppo_streetfighterLEVEL1.zip"
+        new_file = "ppo_streetfighter.zip"
+        # Delete the original file if it exists
+        if os.path.exists(original_file):
+            os.remove(original_file)
+            print(f"Deleted: {original_file}")
+
+        # Make a copy of ppo_streetfighterLEVEL!
+        if os.path.exists(backup_file):
+            shutil.copy(backup_file, new_file)
+            print(f"Copied {backup_file} to {new_file}")
+        else:
+            print(f"Error: {backup_file} does not exist.")
+        with open("../res/level.txt", "w") as file:
+            file.write(str('1'))
+
     def call_option(self):
         menu = OptionMenu(self.screen, Point(20,10))
         menu.mainloop()
+    
+    def maingame(self):
+        {load.rein()
+        }
+        
     
     def call_game(self):
         self.choice = 0
@@ -863,10 +899,28 @@ class MainMenu(Menu):
         print('quit')
         exit()
 
+class Level (Menu):
+    def __init__(self, screen, position = Point(0,0)):
+        with open("../res/level.txt", "r") as file:
+                t=file.read().strip()
+        config.SoundPlayer().play_music('Intro.mp3')
+        Menu.__init__(self, position, screen, 'MenuScreen.png')
+        self.addElt(MenuElt('CURRENT LEVEL', self.call_level))
+        self.addElt(MenuElt(t, self.call_level))
+        self.choice = 1
+    def call_level(self):
+        {}
+    def back(self):
+        {}
+
+
+
 if __name__ == "__main__":
     
     pygame.init()
-    screen = pygame.display.set_mode((320, 240), 0, 32)
+    pygame.mixer.init()
+    screen = pygame.display.set_mode((650, 500), 0, 32)
+    gscreen = pygame.Surface((650, 500), 0, 32)
     pygame.display.set_caption("MenuTest") # program title
-    menu = OptionMenu(screen, Point(20,10))
+    menu = MainMenu(screen, Point(20,10))
     menu.mainloop()

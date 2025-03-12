@@ -14,7 +14,6 @@ round_marker = (False, False)
 end_round = False
 ready_text = None
 fight_text = None
-
 DEBUG = False
 
 class KEYCONST:
@@ -1699,7 +1698,7 @@ class Game:
         ImpactControler().print_me(self.screen)
         ## Mise en place du fade
         if self.color[3] != 0:
-            fade = pygame.Surface((320, 240)).convert_alpha()
+            fade = pygame.Surface((800,600)).convert_alpha()
             fade.fill(self.color)
             self.screen.blit(fade, (0,0))
         
@@ -1753,6 +1752,8 @@ class Game:
 
     def mainloopa(self,ac,ac2):
             global round_marker, end_round, ready_text, fight_text,impact,impact2
+            #ready_text = menu.Text('Ready',Point(128,120))
+            #fight_text = menu.Text('Fight !!',Point(96,120))
             # round_marker = (False, False)
             # end_round = False
             #ready_text = menu.Text('Ready',Point(128,120))
@@ -1892,7 +1893,7 @@ class Game:
             ImpactControler().print_me(self.screen)
             ## Mise en place du fade
             if self.color[3] != 0:
-                fade = pygame.Surface((320, 240)).convert_alpha()
+                fade = pygame.Surface((800, 600)).convert_alpha()
                 fade.fill(self.color)
                 self.screen.blit(fade, (0,0))
             
