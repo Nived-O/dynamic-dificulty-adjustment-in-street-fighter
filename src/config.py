@@ -47,6 +47,7 @@ class  Screen(object):
         elif self.video == 7:
             screen = pygame.transform.scale2x(screen)
             screen = pygame.transform.scale(screen, (1280, 960))
+            
         self.screen.blit(screen, (0,0))
         pygame.display.update()
 
