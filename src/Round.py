@@ -1752,7 +1752,7 @@ class Game:
         ## Display ##
         ############# 
         config.Screen().display_update(self.screen)
-        return impact,act
+        return impact,impact2,act
 
     # return self.ui.scoreP1, self.ui.scoreP2
 

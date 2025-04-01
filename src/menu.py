@@ -830,8 +830,7 @@ class MainMenu(Menu):
         menu.mainloop()
     
     def maingame(self):
-        {load.rein()
-        }
+        load.rein()
         
     
     def call_game(self):

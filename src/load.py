@@ -18,6 +18,7 @@ import torch.optim as optim
 import config
 import menu
 import pandas as pd
+import time
 
 
 
@@ -34,12 +35,18 @@ class StopTrainingOnDoneCallback(BaseCallback):
 
 def log_data_with_actions(observation, player1_action, player2_action, file_path="data.csv"):
     # Ensure observation is a list
+    if player2_action==7:
+       return
+    if player2_action == 0:
+        player2_action = 1
+    elif player2_action == 1:
+        player2_action = 0
     if isinstance(observation, np.ndarray):
         observation = observation.tolist()
     
     # Combine the data
     row = observation + [player1_action, player2_action]
-    
+    print([player1_action, player2_action])
     # Write to CSV
     with open(file_path, mode="a", newline="") as file:
         writer = csv.writer(file)
@@ -67,6 +74,7 @@ class StreetFighterEnv(gym.Env):
         # pygame.mixer.init()
         self.screen_width = 320
         self.screen_height = 240
+        self.total_reward=0
         # self.screen = pygame.display.set_mode((320, 240), 0, 32)
         # self.player1 = Round.Player('Ken', 120, 100)
         # self.player2 = Round.Player('Ken', 120, 100, Player2=True,alt_color = True)
@@ -108,16 +116,14 @@ class StreetFighterEnv(gym.Env):
         
         # Update the game state (you may have a game loop or logic to handle       
         # Get the current observation
-        i1,pa2=self.game.mainloop(action)
+        i1,i2,pa2=self.game.mainloop(action)
         observation = self._get_observation()
         reward=0
         # Calculate the reward (implement your reward logic)
         #reward = self._calculate_reward()
         if i1 !=None:
             reward+=5
-        if(action in(4,5,6)):
-            reward+=1
-        if(i1==None and action in(4,5,6)):
+        if(i2!=None):
             reward+=-2
         
         # Determine if the game is done
@@ -127,6 +133,8 @@ class StreetFighterEnv(gym.Env):
                 self.won=2
             else:
                 self.won=1
+        self.total_reward+=reward
+        print(self.total_reward)
         info={}
         truncated = False
         log_data_with_actions(observation,action,pa2)
@@ -182,18 +190,28 @@ def rein():
     torch.save(action_tensor, "action_data.pt")
     print("✅ Actions saved as 'action_data.pt'")
 
-    env.screen.fill((0, 0, 0))  # RGB for white
-    pygame.display.flip()
+
+    image = pygame.image.load("../res/youwin.png").convert()
+    image = pygame.transform.scale(image, (400,300))
+    
     if(env.won==2):
+        env.screen.fill((0, 0, 0))  # RGB for white
+        env.screen.blit(image, (0, 0))
+        pygame.display.flip()
+        time.sleep(2)
+        env.screen.fill((0,0,0))
+        pygame.display.flip()
         WIDTH, HEIGHT = 100, 10
         BAR_WIDTH = 100
         BAR_HEIGHT = 30
-        BAR_X = (WIDTH - BAR_WIDTH) // 2
-        BAR_Y = (HEIGHT - BAR_HEIGHT) // 2
+        BAR_X = 200
+        BAR_Y = 200
         BLACK = (0, 0, 0)
         WHITE = (255, 255, 255)
         GREEN = (0, 255, 0)  
+        progress=0
         pygame.draw.rect(env.screen, WHITE, (BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT), 2)
+        pygame.display.flip()
         # Load observation & action datasets
         obs_data = torch.load("fighting_data.pt")   # Observations (states)
         action_data = torch.load("action_data.pt")  # Actions
@@ -228,6 +246,9 @@ def rein():
                 loss.backward()
                 optimizer.step()
             print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.4f}")
+            progress+=20
+            pygame.draw.rect(env.screen, GREEN, (BAR_X, BAR_Y, progress, BAR_HEIGHT))
+            pygame.display.flip()
         ppo_model.save("ppo_streetfighter")
         print("✅ Training complete! Model saved as ppo_streetfighter")
         with open("../res/level.txt", "r") as file:
@@ -240,6 +261,7 @@ def rein():
         empty_df = df.head(0)
         # Write the empty DataFrame (with only header) back to the CSV file
         empty_df.to_csv("data.csv", index=False)
+        print(env.total_reward)
 
 
 if __name__ == "__main__":

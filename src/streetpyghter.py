@@ -4,15 +4,16 @@ import menu
 from game import Point
 
 if __name__ == "__main__":
-    print('loading...')
+    print('loadinaaag...')
     options = config.OptionConfig()
     
     pygame.init()
     pygame.mixer.init()
     config.Screen()
     
-    screen = pygame.Surface((320, 240), 0, 32)
+    screen = pygame.display.set_mode((650, 500), 0, 32)
+    #gscreen = pygame.Surface((650, 500), 0, 32)
 
-    menu = menu.MainMenu(screen, Point(50,140))
+    menu = menu.MainMenu(screen, Point(20,10))
     menu.mainloop()
     
